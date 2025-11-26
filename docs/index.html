@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered data analysis tool. Upload CSV, Excel, or JSON files and get instant insights, visualizations, and natural language data queries. Supports OpenAI, Ollama, and Claude.">
+    <meta name="keywords" content="data analysis, AI, machine learning, data visualization, pandas, CSV, Excel, JSON, OpenAI, Ollama, Claude, natural language query">
+    <meta name="author" content="yoon-k">
+    <meta property="og:title" content="AI Data Analyst - Intelligent Data Analysis">
+    <meta property="og:description" content="Upload your data and get AI-powered insights instantly">
+    <meta property="og:type" content="website">
+    <title>AI Data Analyst | OpenWebUI + LLM Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #0ea5e9; --primary-dark: #0284c7; --secondary: #8b5cf6; --success: #10b981; --bg-dark: #0f172a; --bg-card: #1e293b; --bg-input: #334155; --text-primary: #f8fafc; --text-secondary: #94a3b8; --border: #475569; --radius: 12px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-primary); line-height: 1.6; }
+        .header { background: linear-gradient(135deg, var(--bg-card), var(--bg-dark)); border-bottom: 1px solid var(--border); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; }
+        .logo-icon { font-size: 1.75rem; }
+        .logo h1 { font-size: 1.25rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .lang-selector { display: flex; gap: 0.25rem; background: var(--bg-input); padding: 0.25rem; border-radius: 8px; }
+        .lang-btn { padding: 0.375rem 0.75rem; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 6px; font-size: 0.875rem; transition: all 0.2s; }
+        .lang-btn:hover { color: var(--text-primary); }
+        .lang-btn.active { background: var(--primary); color: white; }
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .hero { text-align: center; padding: 3rem 1rem; }
+        .demo-badge { display: inline-block; padding: 0.5rem 1rem; background: rgba(14, 165, 233, 0.2); border: 1px solid var(--primary); border-radius: 20px; color: var(--primary); font-size: 0.875rem; }
+        .hero h2 { font-size: 2.5rem; margin: 1rem 0; background: linear-gradient(135deg, var(--text-primary), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.125rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 2rem; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 3rem 0; }
+        .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: transform 0.2s; }
+        .feature-card:hover { transform: translateY(-4px); }
+        .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.125rem; margin-bottom: 0.5rem; }
+        .feature-card p { color: var(--text-secondary); font-size: 0.875rem; }
+        .providers { display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
+        .provider { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+        .demo-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin: 2rem 0; text-align: center; }
+        .demo-section h3 { margin-bottom: 1.5rem; }
+        .demo-image { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+        .quick-start { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin: 2rem 0; }
+        .quick-start h3 { margin-bottom: 1rem; }
+        .code-block { background: var(--bg-dark); border-radius: 8px; padding: 1rem; overflow-x: auto; }
+        .code-block code { font-family: monospace; font-size: 0.8125rem; color: var(--secondary); }
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-secondary { background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border); }
+        .cta-buttons { display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+        footer { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.875rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+        footer a { color: var(--primary); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo"><span class="logo-icon">📊</span><h1 id="title">AI Data Analyst</h1></div>
+            <div class="lang-selector">
+                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setLanguage('ko')">KO</button>
+                <button class="lang-btn" onclick="setLanguage('ja')">JA</button>
+            </div>
+        </div>
+    </header>
+    <main class="main-container">
+        <section class="hero">
+            <span class="demo-badge" id="demoBadge">Live Demo</span>
+            <h2 id="heroTitle">AI-Powered Data Analysis</h2>
+            <p id="heroDesc">Upload CSV, Excel, or JSON files and get instant AI insights, visualizations, and natural language data queries.</p>
+        </section>
+        <div class="providers">
+            <div class="provider"><span>🤖</span><span>OpenAI GPT-4</span></div>
+            <div class="provider"><span>🦙</span><span>Ollama (Local)</span></div>
+            <div class="provider"><span>🧠</span><span>Anthropic Claude</span></div>
+        </div>
+        <section class="features">
+            <div class="feature-card"><div class="feature-icon">📁</div><h3 id="feat1Title">Multi-Format Support</h3><p id="feat1Desc">Upload CSV, Excel (.xlsx), or JSON files up to 16MB</p></div>
+            <div class="feature-card"><div class="feature-icon">🔍</div><h3 id="feat2Title">Natural Language Query</h3><p id="feat2Desc">Ask questions about your data in plain English</p></div>
+            <div class="feature-card"><div class="feature-icon">📈</div><h3 id="feat3Title">Auto Visualization</h3><p id="feat3Desc">Generate bar, line, pie, scatter, and more charts</p></div>
+            <div class="feature-card"><div class="feature-icon">💡</div><h3 id="feat4Title">AI Insights</h3><p id="feat4Desc">Get automatic insights, patterns, and recommendations</p></div>
+            <div class="feature-card"><div class="feature-icon">📊</div><h3 id="feat5Title">Statistical Analysis</h3><p id="feat5Desc">Correlation, outlier detection, distribution analysis</p></div>
+            <div class="feature-card"><div class="feature-icon">💬</div><h3 id="feat6Title">Interactive Chat</h3><p id="feat6Desc">Have a conversation about your data</p></div>
+        </section>
+        <section class="quick-start">
+            <h3 id="quickStartTitle">Quick Start</h3>
+            <div class="code-block"><code>
+git clone https://github.com/yoon-k/openwebui-data-analyst.git<br>
+cd openwebui-data-analyst<br>
+pip install -r requirements.txt<br>
+cp .env.example .env<br>
+python -m app.api
+            </code></div>
+        </section>
+        <div class="cta-buttons">
+            <a href="https://github.com/yoon-k/openwebui-data-analyst" class="btn btn-primary" id="viewGithub">📦 View on GitHub</a>
+            <a href="#features" class="btn btn-secondary" id="learnMore">📖 Learn More</a>
+        </div>
+    </main>
+    <footer><p id="footerText">Built with Flask + Pandas + Matplotlib | Supports OpenAI, Ollama, Anthropic<br><a href="https://github.com/yoon-k">GitHub</a> • MIT License</p></footer>
+    <script>
+        const i18n = {
+            en: { title: "AI Data Analyst", demoBadge: "Live Demo", heroTitle: "AI-Powered Data Analysis", heroDesc: "Upload CSV, Excel, or JSON files and get instant AI insights, visualizations, and natural language data queries.", feat1Title: "Multi-Format Support", feat1Desc: "Upload CSV, Excel (.xlsx), or JSON files up to 16MB", feat2Title: "Natural Language Query", feat2Desc: "Ask questions about your data in plain English", feat3Title: "Auto Visualization", feat3Desc: "Generate bar, line, pie, scatter, and more charts", feat4Title: "AI Insights", feat4Desc: "Get automatic insights, patterns, and recommendations", feat5Title: "Statistical Analysis", feat5Desc: "Correlation, outlier detection, distribution analysis", feat6Title: "Interactive Chat", feat6Desc: "Have a conversation about your data", quickStartTitle: "Quick Start", viewGithub: "View on GitHub", learnMore: "Learn More", footerText: "Built with Flask + Pandas + Matplotlib | Supports OpenAI, Ollama, Anthropic" },
+            ko: { title: "AI 데이터 분석가", demoBadge: "라이브 데모", heroTitle: "AI 기반 데이터 분석", heroDesc: "CSV, Excel, JSON 파일을 업로드하고 AI 인사이트, 시각화, 자연어 쿼리를 즉시 받아보세요.", feat1Title: "다중 형식 지원", feat1Desc: "CSV, Excel (.xlsx), JSON 파일 최대 16MB 업로드", feat2Title: "자연어 쿼리", feat2Desc: "일반 언어로 데이터에 대해 질문하세요", feat3Title: "자동 시각화", feat3Desc: "막대, 선, 파이, 산점도 등 차트 생성", feat4Title: "AI 인사이트", feat4Desc: "자동 인사이트, 패턴, 권장 사항 제공", feat5Title: "통계 분석", feat5Desc: "상관관계, 이상치 감지, 분포 분석", feat6Title: "대화형 채팅", feat6Desc: "데이터에 대해 대화하세요", quickStartTitle: "빠른 시작", viewGithub: "GitHub에서 보기", learnMore: "자세히 알아보기", footerText: "Flask + Pandas + Matplotlib로 제작 | OpenAI, Ollama, Anthropic 지원" },
+            ja: { title: "AIデータアナリスト", demoBadge: "ライブデモ", heroTitle: "AI搭載データ分析", heroDesc: "CSV、Excel、JSONファイルをアップロードして、AIインサイト、可視化、自然言語クエリを即座に取得。", feat1Title: "マルチフォーマット対応", feat1Desc: "CSV、Excel (.xlsx)、JSONファイル最大16MBアップロード", feat2Title: "自然言語クエリ", feat2Desc: "普通の言葉でデータについて質問", feat3Title: "自動可視化", feat3Desc: "棒、線、円、散布図などのチャートを生成", feat4Title: "AIインサイト", feat4Desc: "自動インサイト、パターン、推奨事項を取得", feat5Title: "統計分析", feat5Desc: "相関、外れ値検出、分布分析", feat6Title: "インタラクティブチャット", feat6Desc: "データについて会話", quickStartTitle: "クイックスタート", viewGithub: "GitHubで見る", learnMore: "詳細を見る", footerText: "Flask + Pandas + Matplotlibで構築 | OpenAI、Ollama、Anthropicをサポート" }
+        };
+        function setLanguage(lang) {
+            const t = i18n[lang];
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('demoBadge').textContent = t.demoBadge;
+            document.getElementById('heroTitle').textContent = t.heroTitle;
+            document.getElementById('heroDesc').textContent = t.heroDesc;
+            document.getElementById('feat1Title').textContent = t.feat1Title;
+            document.getElementById('feat1Desc').textContent = t.feat1Desc;
+            document.getElementById('feat2Title').textContent = t.feat2Title;
+            document.getElementById('feat2Desc').textContent = t.feat2Desc;
+            document.getElementById('feat3Title').textContent = t.feat3Title;
+            document.getElementById('feat3Desc').textContent = t.feat3Desc;
+            document.getElementById('feat4Title').textContent = t.feat4Title;
+            document.getElementById('feat4Desc').textContent = t.feat4Desc;
+            document.getElementById('feat5Title').textContent = t.feat5Title;
+            document.getElementById('feat5Desc').textContent = t.feat5Desc;
+            document.getElementById('feat6Title').textContent = t.feat6Title;
+            document.getElementById('feat6Desc').textContent = t.feat6Desc;
+            document.getElementById('quickStartTitle').textContent = t.quickStartTitle;
+            document.getElementById('viewGithub').innerHTML = `📦 ${t.viewGithub}`;
+            document.getElementById('learnMore').innerHTML = `📖 ${t.learnMore}`;
+            document.getElementById('footerText').innerHTML = `${t.footerText}<br><a href="https://github.com/yoon-k">GitHub</a> • MIT License`;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.textContent === lang.toUpperCase()));
+        }
+    </script>
+</body>
+</html>

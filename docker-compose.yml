@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  data-analyst:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - LLM_PROVIDER=${LLM_PROVIDER:-openai}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://ollama:11434}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - MAX_UPLOAD_SIZE=16777216
+    restart: unless-stopped
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    profiles:
+      - local-llm
+volumes:
+  ollama_data:
