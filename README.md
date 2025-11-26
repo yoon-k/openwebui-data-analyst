@@ -17,6 +17,8 @@
 > - Data visualization with Matplotlib/Seaborn
 > - Natural language to SQL/code translation
 > - File handling (CSV, Excel, JSON)
+>
+> 🚀 **Continuous Improvement**: This project is under active development with ongoing enhancements planned.
 
 ---
 
