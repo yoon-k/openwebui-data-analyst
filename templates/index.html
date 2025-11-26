@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered data analysis tool. Upload CSV, Excel, or JSON and get instant insights, visualizations, and natural language queries.">
+    <title>AI Data Analyst | OpenWebUI + LLM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo"><span class="logo-icon">📊</span><h1 id="title">AI Data Analyst</h1></div>
+            <div class="lang-selector">
+                <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" data-lang="ko" onclick="setLanguage('ko')">KO</button>
+                <button class="lang-btn" data-lang="ja" onclick="setLanguage('ja')">JA</button>
+            </div>
+        </div>
+        <p id="subtitle" style="text-align:center;color:var(--text-secondary);font-size:0.875rem;margin-top:0.5rem;">Upload data and get instant AI-powered insights</p>
+    </header>
+    <main class="main-container">
+        <div class="panel" style="height:fit-content;">
+            <div class="panel-header"><span class="panel-title" id="uploadPanelTitle">DATA SOURCE</span></div>
+            <div class="panel-body">
+                <div id="uploadZone" class="upload-zone">
+                    <div class="upload-icon">📁</div>
+                    <div id="uploadTitle" class="upload-text">Drop your file here</div>
+                    <div id="uploadSubtitle" class="upload-text" style="font-size:0.75rem;">CSV, Excel, or JSON (max 16MB)</div>
+                </div>
+                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.json" style="display:none;">
+                <div id="fileInfo"></div>
+                <div style="margin-top:1rem;"><div class="panel-title" id="columnsTitle">Columns</div><div id="columnList" class="column-list" style="margin-top:0.5rem;"></div></div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title" id="resultsPanelTitle">ANALYSIS</span>
+                <div class="tabs">
+                    <button class="tab active" data-tab="data" id="tabData" onclick="showTab('data')">Data</button>
+                    <button class="tab" data-tab="chart" id="tabChart" onclick="showTab('chart')">Chart</button>
+                    <button class="tab" data-tab="insights" id="tabInsights" onclick="showTab('insights')">Insights</button>
+                    <button class="tab" data-tab="chat" id="tabChat" onclick="showTab('chat')">Chat</button>
+                </div>
+            </div>
+            <div class="panel-body" id="resultsContainer">
+                <div class="empty-state"><div class="empty-state-icon">📊</div><h3>No Data Loaded</h3><p>Upload a CSV, Excel, or JSON file to get started</p></div>
+            </div>
+        </div>
+    </main>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
