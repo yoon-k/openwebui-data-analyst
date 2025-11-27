@@ -3,132 +3,1775 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AI-powered data analysis tool. Upload CSV, Excel, or JSON files and get instant insights, visualizations, and natural language data queries. Supports OpenAI, Ollama, and Claude.">
-    <meta name="keywords" content="data analysis, AI, machine learning, data visualization, pandas, CSV, Excel, JSON, OpenAI, Ollama, Claude, natural language query">
+    <meta name="description" content="AI Data Analyst - Upload CSV, Excel, JSON and get instant AI-powered insights, statistics, and beautiful visualizations. Supports 7 languages.">
+    <meta name="keywords" content="AI, Data Analysis, CSV, Excel, JSON, Visualization, Chart, Statistics, Machine Learning, Analytics, OpenWebUI">
     <meta name="author" content="yoon-k">
-    <meta property="og:title" content="AI Data Analyst - Intelligent Data Analysis">
-    <meta property="og:description" content="Upload your data and get AI-powered insights instantly">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="AI Data Analyst | OpenWebUI + LLM">
+    <meta property="og:description" content="AI-powered data analysis with instant insights and beautiful visualizations">
     <meta property="og:type" content="website">
-    <title>AI Data Analyst | OpenWebUI + LLM Demo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>AI Data Analyst | OpenWebUI + LLM - Demo</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📊%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #0ea5e9; --primary-dark: #0284c7; --secondary: #8b5cf6; --success: #10b981; --bg-dark: #0f172a; --bg-card: #1e293b; --bg-input: #334155; --text-primary: #f8fafc; --text-secondary: #94a3b8; --border: #475569; --radius: 12px; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-primary); line-height: 1.6; }
-        .header { background: linear-gradient(135deg, var(--bg-card), var(--bg-dark)); border-bottom: 1px solid var(--border); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
-        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { display: flex; align-items: center; gap: 0.75rem; }
-        .logo-icon { font-size: 1.75rem; }
-        .logo h1 { font-size: 1.25rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .lang-selector { display: flex; gap: 0.25rem; background: var(--bg-input); padding: 0.25rem; border-radius: 8px; }
-        .lang-btn { padding: 0.375rem 0.75rem; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 6px; font-size: 0.875rem; transition: all 0.2s; }
-        .lang-btn:hover { color: var(--text-primary); }
-        .lang-btn.active { background: var(--primary); color: white; }
-        .main-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-        .hero { text-align: center; padding: 3rem 1rem; }
-        .demo-badge { display: inline-block; padding: 0.5rem 1rem; background: rgba(14, 165, 233, 0.2); border: 1px solid var(--primary); border-radius: 20px; color: var(--primary); font-size: 0.875rem; }
-        .hero h2 { font-size: 2.5rem; margin: 1rem 0; background: linear-gradient(135deg, var(--text-primary), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 1.125rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 2rem; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 3rem 0; }
-        .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: transform 0.2s; }
-        .feature-card:hover { transform: translateY(-4px); }
-        .feature-icon { font-size: 2rem; margin-bottom: 1rem; }
-        .feature-card h3 { font-size: 1.125rem; margin-bottom: 0.5rem; }
-        .feature-card p { color: var(--text-secondary); font-size: 0.875rem; }
-        .providers { display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
-        .provider { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
-        .demo-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin: 2rem 0; text-align: center; }
-        .demo-section h3 { margin-bottom: 1.5rem; }
-        .demo-image { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
-        .quick-start { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin: 2rem 0; }
-        .quick-start h3 { margin-bottom: 1rem; }
-        .code-block { background: var(--bg-dark); border-radius: 8px; padding: 1rem; overflow-x: auto; }
-        .code-block code { font-family: monospace; font-size: 0.8125rem; color: var(--secondary); }
-        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.2s; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        .btn-secondary { background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border); }
-        .cta-buttons { display: flex; justify-content: center; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
-        footer { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.875rem; border-top: 1px solid var(--border); margin-top: 3rem; }
-        footer a { color: var(--primary); text-decoration: none; }
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --bg-card: #16161f;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-tertiary: #a855f7;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.3);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(2%, 2%) rotate(1deg); }
+            50% { transform: translate(0, 4%) rotate(0deg); }
+            75% { transform: translate(-2%, 2%) rotate(-1deg); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 4px;
+        }
+
+        .lang-btn {
+            padding: 6px 10px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 48px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 60px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        /* Stats Section */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 80px;
+            padding: 32px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Features Section */
+        .features {
+            position: relative;
+            padding: 120px 24px;
+            z-index: 1;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 64px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--gradient-glow);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-glow);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Demo Section */
+        .demo {
+            position: relative;
+            padding: 120px 24px;
+            z-index: 1;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .demo-window {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .demo-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .demo-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .demo-dot.red { background: #ff5f57; }
+        .demo-dot.yellow { background: #ffbd2e; }
+        .demo-dot.green { background: #28ca41; }
+
+        .demo-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .demo-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 600px;
+        }
+
+        .demo-sidebar {
+            background: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            padding: 24px;
+        }
+
+        .demo-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .demo-upload:hover {
+            border-color: var(--accent-primary);
+            background: var(--gradient-glow);
+        }
+
+        .demo-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .demo-upload-text {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .demo-upload-subtext {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .demo-columns {
+            margin-top: 24px;
+        }
+
+        .demo-columns-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .demo-column-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .demo-column-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+        }
+
+        .column-type {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .column-type.number { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .column-type.text { background: rgba(59, 130, 246, 0.2); color: var(--info); }
+        .column-type.date { background: rgba(168, 85, 247, 0.2); color: var(--accent-tertiary); }
+
+        .demo-main {
+            padding: 24px;
+        }
+
+        .demo-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .demo-tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .demo-tab:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        .demo-tab.active {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            color: white;
+        }
+
+        .demo-chart {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .demo-chart-title {
+            font-weight: 600;
+        }
+
+        .demo-chart-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-type-btn {
+            padding: 6px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .chart-type-btn:hover, .chart-type-btn.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .demo-chart-area {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            padding: 20px 0;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            min-height: 20px;
+            animation: barGrow 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes barGrow {
+            from { height: 0; opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .chart-bar:nth-child(1) { height: 60%; animation-delay: 0.1s; }
+        .chart-bar:nth-child(2) { height: 80%; animation-delay: 0.2s; }
+        .chart-bar:nth-child(3) { height: 45%; animation-delay: 0.3s; }
+        .chart-bar:nth-child(4) { height: 90%; animation-delay: 0.4s; }
+        .chart-bar:nth-child(5) { height: 70%; animation-delay: 0.5s; }
+        .chart-bar:nth-child(6) { height: 55%; animation-delay: 0.6s; }
+        .chart-bar:nth-child(7) { height: 85%; animation-delay: 0.7s; }
+        .chart-bar:nth-child(8) { height: 40%; animation-delay: 0.8s; }
+
+        /* Chart Types Section */
+        .chart-types {
+            position: relative;
+            padding: 120px 24px;
+            background: var(--bg-secondary);
+            z-index: 1;
+        }
+
+        .chart-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+
+        .chart-type-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .chart-type-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .chart-type-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .chart-type-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        /* Languages Section */
+        .languages {
+            position: relative;
+            padding: 120px 24px;
+            z-index: 1;
+        }
+
+        .lang-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+        }
+
+        .lang-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .lang-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+        }
+
+        .lang-flag {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .lang-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .lang-code {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Use Cases Section */
+        .use-cases {
+            position: relative;
+            padding: 120px 24px;
+            background: var(--bg-secondary);
+            z-index: 1;
+        }
+
+        .use-cases-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .use-case-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: all 0.3s;
+        }
+
+        .use-case-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .use-case-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .use-case-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .use-case-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            position: relative;
+            padding: 120px 24px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .cta p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 48px 24px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-logo span:first-child {
+            font-size: 1.5rem;
+        }
+
+        .footer-logo span:last-child {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .demo-content {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-sidebar {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .demo-tabs {
+                flex-wrap: wrap;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chart-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .lang-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="bg-animation"></div>
+
     <header class="header">
         <div class="header-content">
-            <div class="logo"><span class="logo-icon">📊</span><h1 id="title">AI Data Analyst</h1></div>
+            <div class="logo">
+                <span class="logo-icon">📊</span>
+                <div>
+                    <h1 id="logoTitle">AI Data Analyst</h1>
+                    <p class="logo-subtitle" id="logoSubtitle">OpenWebUI + LLM Powered</p>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#features" class="nav-link" id="navFeatures">Features</a>
+                <a href="#demo" class="nav-link" id="navDemo">Demo</a>
+                <a href="#charts" class="nav-link" id="navCharts">Charts</a>
+                <a href="#languages" class="nav-link" id="navLanguages">Languages</a>
+            </nav>
             <div class="lang-selector">
                 <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="setLanguage('ko')">KO</button>
-                <button class="lang-btn" onclick="setLanguage('ja')">JA</button>
+                <button class="lang-btn" onclick="setLanguage('ko')">한국어</button>
+                <button class="lang-btn" onclick="setLanguage('ja')">日本語</button>
+                <button class="lang-btn" onclick="setLanguage('zh')">中文</button>
+                <button class="lang-btn" onclick="setLanguage('es')">ES</button>
+                <button class="lang-btn" onclick="setLanguage('fr')">FR</button>
+                <button class="lang-btn" onclick="setLanguage('de')">DE</button>
             </div>
         </div>
     </header>
-    <main class="main-container">
-        <section class="hero">
-            <span class="demo-badge" id="demoBadge">Live Demo</span>
-            <h2 id="heroTitle">AI-Powered Data Analysis</h2>
-            <p id="heroDesc">Upload CSV, Excel, or JSON files and get instant AI insights, visualizations, and natural language data queries.</p>
-        </section>
-        <div class="providers">
-            <div class="provider"><span>🤖</span><span>OpenAI GPT-4</span></div>
-            <div class="provider"><span>🦙</span><span>Ollama (Local)</span></div>
-            <div class="provider"><span>🧠</span><span>Anthropic Claude</span></div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                <span id="heroBadge">AI-Powered Data Analysis</span>
+            </div>
+            <h1 id="heroTitle">Transform Your Data Into <span>Actionable Insights</span></h1>
+            <p class="hero-description" id="heroDescription">
+                Upload CSV, Excel, or JSON files and let AI generate instant statistical analysis, beautiful visualizations, and natural language insights.
+            </p>
+            <div class="hero-buttons">
+                <a href="https://github.com/yoon-gu/openwebui-data-analyst" class="btn btn-primary" target="_blank">
+                    <span>⭐</span>
+                    <span id="btnGithub">View on GitHub</span>
+                </a>
+                <a href="#demo" class="btn btn-secondary">
+                    <span>👁️</span>
+                    <span id="btnDemo">See Demo</span>
+                </a>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value">10+</div>
+                    <div class="stat-label" id="statCharts">Chart Types</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label" id="statLangs">Languages</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label" id="statFormats">File Formats</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label" id="statInsights">AI Insights</div>
+                </div>
+            </div>
         </div>
-        <section class="features">
-            <div class="feature-card"><div class="feature-icon">📁</div><h3 id="feat1Title">Multi-Format Support</h3><p id="feat1Desc">Upload CSV, Excel (.xlsx), or JSON files up to 16MB</p></div>
-            <div class="feature-card"><div class="feature-icon">🔍</div><h3 id="feat2Title">Natural Language Query</h3><p id="feat2Desc">Ask questions about your data in plain English</p></div>
-            <div class="feature-card"><div class="feature-icon">📈</div><h3 id="feat3Title">Auto Visualization</h3><p id="feat3Desc">Generate bar, line, pie, scatter, and more charts</p></div>
-            <div class="feature-card"><div class="feature-icon">💡</div><h3 id="feat4Title">AI Insights</h3><p id="feat4Desc">Get automatic insights, patterns, and recommendations</p></div>
-            <div class="feature-card"><div class="feature-icon">📊</div><h3 id="feat5Title">Statistical Analysis</h3><p id="feat5Desc">Correlation, outlier detection, distribution analysis</p></div>
-            <div class="feature-card"><div class="feature-icon">💬</div><h3 id="feat6Title">Interactive Chat</h3><p id="feat6Desc">Have a conversation about your data</p></div>
-        </section>
-        <section class="quick-start">
-            <h3 id="quickStartTitle">Quick Start</h3>
-            <div class="code-block"><code>
-git clone https://github.com/yoon-k/openwebui-data-analyst.git<br>
-cd openwebui-data-analyst<br>
-pip install -r requirements.txt<br>
-cp .env.example .env<br>
-python -m app.api
-            </code></div>
-        </section>
-        <div class="cta-buttons">
-            <a href="https://github.com/yoon-k/openwebui-data-analyst" class="btn btn-primary" id="viewGithub">📦 View on GitHub</a>
-            <a href="#features" class="btn btn-secondary" id="learnMore">📖 Learn More</a>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-header">
+            <span class="section-tag" id="featuresTag">Features</span>
+            <h2 id="featuresTitle">Powerful Data Analysis Tools</h2>
+            <p id="featuresDescription">Everything you need to understand your data, powered by advanced AI</p>
         </div>
-    </main>
-    <footer><p id="footerText">Built with Flask + Pandas + Matplotlib | Supports OpenAI, Ollama, Anthropic<br><a href="https://github.com/yoon-k">GitHub</a> • MIT License</p></footer>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📤</div>
+                <h3 id="feature1Title">Smart File Upload</h3>
+                <p id="feature1Desc">Drag & drop CSV, Excel (.xlsx, .xls), or JSON files. Automatic format detection and parsing up to 16MB.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3 id="feature2Title">10+ Chart Types</h3>
+                <p id="feature2Desc">Bar, Line, Pie, Scatter, Histogram, Heatmap, Box Plot, Area, Donut, Radar charts with customization options.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔢</div>
+                <h3 id="feature3Title">Statistical Analysis</h3>
+                <p id="feature3Desc">Automatic calculation of mean, median, std dev, min/max, quartiles for numeric data and frequency analysis for categorical data.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3 id="feature4Title">Natural Language Queries</h3>
+                <p id="feature4Desc">Ask questions about your data in plain language. AI understands context and provides intelligent responses.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <h3 id="feature5Title">AI-Generated Insights</h3>
+                <p id="feature5Desc">Automatic pattern recognition, trend analysis, and actionable recommendations powered by LLM.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📜</div>
+                <h3 id="feature6Title">Analysis History</h3>
+                <p id="feature6Desc">Track all your analyses with persistent history. Review, compare, and build upon previous insights.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo" id="demo">
+        <div class="demo-container">
+            <div class="section-header">
+                <span class="section-tag" id="demoTag">Interactive Demo</span>
+                <h2 id="demoTitle">See It In Action</h2>
+                <p id="demoDescription">Experience the power of AI-driven data analysis</p>
+            </div>
+            <div class="demo-window">
+                <div class="demo-header">
+                    <div class="demo-dots">
+                        <span class="demo-dot red"></span>
+                        <span class="demo-dot yellow"></span>
+                        <span class="demo-dot green"></span>
+                    </div>
+                    <span class="demo-title">AI Data Analyst</span>
+                    <div></div>
+                </div>
+                <div class="demo-content">
+                    <div class="demo-sidebar">
+                        <div class="demo-upload">
+                            <div class="demo-upload-icon">📁</div>
+                            <div class="demo-upload-text" id="demoUploadText">Drop your file here</div>
+                            <div class="demo-upload-subtext" id="demoUploadSubtext">CSV, Excel, or JSON (max 16MB)</div>
+                        </div>
+                        <div class="demo-columns">
+                            <div class="demo-columns-title" id="demoColumnsTitle">COLUMNS</div>
+                            <div class="demo-column-list">
+                                <div class="demo-column-item">
+                                    <span class="column-type number">NUM</span>
+                                    <span>revenue</span>
+                                </div>
+                                <div class="demo-column-item">
+                                    <span class="column-type text">TXT</span>
+                                    <span>category</span>
+                                </div>
+                                <div class="demo-column-item">
+                                    <span class="column-type date">DATE</span>
+                                    <span>created_at</span>
+                                </div>
+                                <div class="demo-column-item">
+                                    <span class="column-type number">NUM</span>
+                                    <span>quantity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-main">
+                        <div class="demo-tabs">
+                            <button class="demo-tab" id="demoTabData">Data</button>
+                            <button class="demo-tab active" id="demoTabChart">Chart</button>
+                            <button class="demo-tab" id="demoTabStats">Statistics</button>
+                            <button class="demo-tab" id="demoTabInsights">Insights</button>
+                            <button class="demo-tab" id="demoTabChat">Chat</button>
+                            <button class="demo-tab" id="demoTabHistory">History</button>
+                        </div>
+                        <div class="demo-chart">
+                            <div class="demo-chart-header">
+                                <span class="demo-chart-title" id="demoChartTitle">Revenue by Category</span>
+                                <div class="demo-chart-controls">
+                                    <button class="chart-type-btn active">📊</button>
+                                    <button class="chart-type-btn">📈</button>
+                                    <button class="chart-type-btn">🥧</button>
+                                    <button class="chart-type-btn">⬡</button>
+                                </div>
+                            </div>
+                            <div class="demo-chart-area">
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                                <div class="chart-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="chart-types" id="charts">
+        <div class="section-header">
+            <span class="section-tag" id="chartsTag">Visualizations</span>
+            <h2 id="chartsTitle">10+ Chart Types Available</h2>
+            <p id="chartsDescription">Choose the perfect visualization for your data</p>
+        </div>
+        <div class="chart-grid">
+            <div class="chart-type-card">
+                <div class="chart-type-icon">📊</div>
+                <div class="chart-type-name">Bar</div>
+            </div>
+            <div class="chart-type-card">
+                <div class="chart-type-icon">📈</div>
+                <div class="chart-type-name">Line</div>
+            </div>
+            <div class="chart-type-card">
+                <div class="chart-type-icon">🥧</div>
+                <div class="chart-type-name">Pie</div>
+            </div>
+            <div class="chart-type-card">
+                <div class="chart-type-icon">⚬</div>
+                <div class="chart-type-name">Scatter</div>
+            </div>
+            <div class="chart-type-card">
+                <div class="chart-type-icon">📶</div>
+                <div class="chart-type-name">Histogram</div>
+            </div>
+            <div class="chart-type-card">
+                <div class="chart-type-icon">🔥</div>
+                <div class="chart-type-name">Heatmap</div>
+            </div>
+            <div class="chart-type-card">
+                <div class="chart-type-icon">📦</div>
+                <div class="chart-type-name">Box Plot</div>
+            </div>
+            <div class="chart-type-card">
+                <div class="chart-type-icon">📉</div>
+                <div class="chart-type-name">Area</div>
+            </div>
+            <div class="chart-type-card">
+                <div class="chart-type-icon">🍩</div>
+                <div class="chart-type-name">Donut</div>
+            </div>
+            <div class="chart-type-card">
+                <div class="chart-type-icon">🕸️</div>
+                <div class="chart-type-name">Radar</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="languages" id="languages">
+        <div class="section-header">
+            <span class="section-tag" id="languagesTag">Global</span>
+            <h2 id="languagesTitle">7 Languages Supported</h2>
+            <p id="languagesDescription">Use the tool in your preferred language</p>
+        </div>
+        <div class="lang-grid">
+            <div class="lang-card">
+                <div class="lang-flag">🇺🇸</div>
+                <div class="lang-name">English</div>
+                <div class="lang-code">EN</div>
+            </div>
+            <div class="lang-card">
+                <div class="lang-flag">🇰🇷</div>
+                <div class="lang-name">한국어</div>
+                <div class="lang-code">KO</div>
+            </div>
+            <div class="lang-card">
+                <div class="lang-flag">🇯🇵</div>
+                <div class="lang-name">日本語</div>
+                <div class="lang-code">JA</div>
+            </div>
+            <div class="lang-card">
+                <div class="lang-flag">🇨🇳</div>
+                <div class="lang-name">中文</div>
+                <div class="lang-code">ZH</div>
+            </div>
+            <div class="lang-card">
+                <div class="lang-flag">🇪🇸</div>
+                <div class="lang-name">Español</div>
+                <div class="lang-code">ES</div>
+            </div>
+            <div class="lang-card">
+                <div class="lang-flag">🇫🇷</div>
+                <div class="lang-name">Français</div>
+                <div class="lang-code">FR</div>
+            </div>
+            <div class="lang-card">
+                <div class="lang-flag">🇩🇪</div>
+                <div class="lang-name">Deutsch</div>
+                <div class="lang-code">DE</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="use-cases">
+        <div class="section-header">
+            <span class="section-tag" id="useCasesTag">Use Cases</span>
+            <h2 id="useCasesTitle">Built for Every Industry</h2>
+            <p id="useCasesDescription">Powerful data analysis for any business need</p>
+        </div>
+        <div class="use-cases-grid">
+            <div class="use-case-card">
+                <div class="use-case-icon">💼</div>
+                <h3 id="useCase1Title">Business Analytics</h3>
+                <p id="useCase1Desc">Analyze sales data, customer metrics, and KPIs to make data-driven decisions.</p>
+            </div>
+            <div class="use-case-card">
+                <div class="use-case-icon">📊</div>
+                <h3 id="useCase2Title">Financial Analysis</h3>
+                <p id="useCase2Desc">Track expenses, revenue trends, and financial forecasting with AI insights.</p>
+            </div>
+            <div class="use-case-card">
+                <div class="use-case-icon">🔬</div>
+                <h3 id="useCase3Title">Research & Science</h3>
+                <p id="useCase3Desc">Statistical analysis for research data, experiments, and scientific studies.</p>
+            </div>
+            <div class="use-case-card">
+                <div class="use-case-icon">🎯</div>
+                <h3 id="useCase4Title">Marketing Analytics</h3>
+                <p id="useCase4Desc">Campaign performance, customer segmentation, and conversion analysis.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="cta-content">
+            <h2 id="ctaTitle">Ready to Analyze Your Data?</h2>
+            <p id="ctaDescription">Deploy your own AI Data Analyst with OpenWebUI and start getting insights in minutes.</p>
+            <div class="hero-buttons">
+                <a href="https://github.com/yoon-gu/openwebui-data-analyst" class="btn btn-primary" target="_blank">
+                    <span>🚀</span>
+                    <span id="ctaBtnStart">Get Started</span>
+                </a>
+                <a href="https://github.com/yoon-gu/openwebui-data-analyst/blob/main/README.md" class="btn btn-secondary" target="_blank">
+                    <span>📖</span>
+                    <span id="ctaBtnDocs">Documentation</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>📊</span>
+                <span>AI Data Analyst</span>
+            </div>
+            <div class="footer-links">
+                <a href="https://github.com/yoon-gu/openwebui-data-analyst" class="footer-link" target="_blank">GitHub</a>
+                <a href="https://github.com/yoon-gu/openwebui-data-analyst/issues" class="footer-link" target="_blank">Issues</a>
+                <a href="https://github.com/yoon-gu" class="footer-link" target="_blank">Author</a>
+            </div>
+            <p class="footer-copy">© 2024 AI Data Analyst. MIT License.</p>
+        </div>
+    </footer>
+
     <script>
         const i18n = {
-            en: { title: "AI Data Analyst", demoBadge: "Live Demo", heroTitle: "AI-Powered Data Analysis", heroDesc: "Upload CSV, Excel, or JSON files and get instant AI insights, visualizations, and natural language data queries.", feat1Title: "Multi-Format Support", feat1Desc: "Upload CSV, Excel (.xlsx), or JSON files up to 16MB", feat2Title: "Natural Language Query", feat2Desc: "Ask questions about your data in plain English", feat3Title: "Auto Visualization", feat3Desc: "Generate bar, line, pie, scatter, and more charts", feat4Title: "AI Insights", feat4Desc: "Get automatic insights, patterns, and recommendations", feat5Title: "Statistical Analysis", feat5Desc: "Correlation, outlier detection, distribution analysis", feat6Title: "Interactive Chat", feat6Desc: "Have a conversation about your data", quickStartTitle: "Quick Start", viewGithub: "View on GitHub", learnMore: "Learn More", footerText: "Built with Flask + Pandas + Matplotlib | Supports OpenAI, Ollama, Anthropic" },
-            ko: { title: "AI 데이터 분석가", demoBadge: "라이브 데모", heroTitle: "AI 기반 데이터 분석", heroDesc: "CSV, Excel, JSON 파일을 업로드하고 AI 인사이트, 시각화, 자연어 쿼리를 즉시 받아보세요.", feat1Title: "다중 형식 지원", feat1Desc: "CSV, Excel (.xlsx), JSON 파일 최대 16MB 업로드", feat2Title: "자연어 쿼리", feat2Desc: "일반 언어로 데이터에 대해 질문하세요", feat3Title: "자동 시각화", feat3Desc: "막대, 선, 파이, 산점도 등 차트 생성", feat4Title: "AI 인사이트", feat4Desc: "자동 인사이트, 패턴, 권장 사항 제공", feat5Title: "통계 분석", feat5Desc: "상관관계, 이상치 감지, 분포 분석", feat6Title: "대화형 채팅", feat6Desc: "데이터에 대해 대화하세요", quickStartTitle: "빠른 시작", viewGithub: "GitHub에서 보기", learnMore: "자세히 알아보기", footerText: "Flask + Pandas + Matplotlib로 제작 | OpenAI, Ollama, Anthropic 지원" },
-            ja: { title: "AIデータアナリスト", demoBadge: "ライブデモ", heroTitle: "AI搭載データ分析", heroDesc: "CSV、Excel、JSONファイルをアップロードして、AIインサイト、可視化、自然言語クエリを即座に取得。", feat1Title: "マルチフォーマット対応", feat1Desc: "CSV、Excel (.xlsx)、JSONファイル最大16MBアップロード", feat2Title: "自然言語クエリ", feat2Desc: "普通の言葉でデータについて質問", feat3Title: "自動可視化", feat3Desc: "棒、線、円、散布図などのチャートを生成", feat4Title: "AIインサイト", feat4Desc: "自動インサイト、パターン、推奨事項を取得", feat5Title: "統計分析", feat5Desc: "相関、外れ値検出、分布分析", feat6Title: "インタラクティブチャット", feat6Desc: "データについて会話", quickStartTitle: "クイックスタート", viewGithub: "GitHubで見る", learnMore: "詳細を見る", footerText: "Flask + Pandas + Matplotlibで構築 | OpenAI、Ollama、Anthropicをサポート" }
+            en: {
+                logoTitle: 'AI Data Analyst',
+                logoSubtitle: 'OpenWebUI + LLM Powered',
+                navFeatures: 'Features',
+                navDemo: 'Demo',
+                navCharts: 'Charts',
+                navLanguages: 'Languages',
+                heroBadge: 'AI-Powered Data Analysis',
+                heroTitle: 'Transform Your Data Into <span>Actionable Insights</span>',
+                heroDescription: 'Upload CSV, Excel, or JSON files and let AI generate instant statistical analysis, beautiful visualizations, and natural language insights.',
+                btnGithub: 'View on GitHub',
+                btnDemo: 'See Demo',
+                statCharts: 'Chart Types',
+                statLangs: 'Languages',
+                statFormats: 'File Formats',
+                statInsights: 'AI Insights',
+                featuresTag: 'Features',
+                featuresTitle: 'Powerful Data Analysis Tools',
+                featuresDescription: 'Everything you need to understand your data, powered by advanced AI',
+                feature1Title: 'Smart File Upload',
+                feature1Desc: 'Drag & drop CSV, Excel (.xlsx, .xls), or JSON files. Automatic format detection and parsing up to 16MB.',
+                feature2Title: '10+ Chart Types',
+                feature2Desc: 'Bar, Line, Pie, Scatter, Histogram, Heatmap, Box Plot, Area, Donut, Radar charts with customization options.',
+                feature3Title: 'Statistical Analysis',
+                feature3Desc: 'Automatic calculation of mean, median, std dev, min/max, quartiles for numeric data and frequency analysis for categorical data.',
+                feature4Title: 'Natural Language Queries',
+                feature4Desc: 'Ask questions about your data in plain language. AI understands context and provides intelligent responses.',
+                feature5Title: 'AI-Generated Insights',
+                feature5Desc: 'Automatic pattern recognition, trend analysis, and actionable recommendations powered by LLM.',
+                feature6Title: 'Analysis History',
+                feature6Desc: 'Track all your analyses with persistent history. Review, compare, and build upon previous insights.',
+                demoTag: 'Interactive Demo',
+                demoTitle: 'See It In Action',
+                demoDescription: 'Experience the power of AI-driven data analysis',
+                demoUploadText: 'Drop your file here',
+                demoUploadSubtext: 'CSV, Excel, or JSON (max 16MB)',
+                demoColumnsTitle: 'COLUMNS',
+                demoTabData: 'Data',
+                demoTabChart: 'Chart',
+                demoTabStats: 'Statistics',
+                demoTabInsights: 'Insights',
+                demoTabChat: 'Chat',
+                demoTabHistory: 'History',
+                demoChartTitle: 'Revenue by Category',
+                chartsTag: 'Visualizations',
+                chartsTitle: '10+ Chart Types Available',
+                chartsDescription: 'Choose the perfect visualization for your data',
+                languagesTag: 'Global',
+                languagesTitle: '7 Languages Supported',
+                languagesDescription: 'Use the tool in your preferred language',
+                useCasesTag: 'Use Cases',
+                useCasesTitle: 'Built for Every Industry',
+                useCasesDescription: 'Powerful data analysis for any business need',
+                useCase1Title: 'Business Analytics',
+                useCase1Desc: 'Analyze sales data, customer metrics, and KPIs to make data-driven decisions.',
+                useCase2Title: 'Financial Analysis',
+                useCase2Desc: 'Track expenses, revenue trends, and financial forecasting with AI insights.',
+                useCase3Title: 'Research & Science',
+                useCase3Desc: 'Statistical analysis for research data, experiments, and scientific studies.',
+                useCase4Title: 'Marketing Analytics',
+                useCase4Desc: 'Campaign performance, customer segmentation, and conversion analysis.',
+                ctaTitle: 'Ready to Analyze Your Data?',
+                ctaDescription: 'Deploy your own AI Data Analyst with OpenWebUI and start getting insights in minutes.',
+                ctaBtnStart: 'Get Started',
+                ctaBtnDocs: 'Documentation'
+            },
+            ko: {
+                logoTitle: 'AI 데이터 분석가',
+                logoSubtitle: 'OpenWebUI + LLM 기반',
+                navFeatures: '기능',
+                navDemo: '데모',
+                navCharts: '차트',
+                navLanguages: '언어',
+                heroBadge: 'AI 기반 데이터 분석',
+                heroTitle: '데이터를 <span>실행 가능한 인사이트</span>로 변환',
+                heroDescription: 'CSV, Excel, JSON 파일을 업로드하면 AI가 즉시 통계 분석, 시각화, 자연어 인사이트를 생성합니다.',
+                btnGithub: 'GitHub에서 보기',
+                btnDemo: '데모 보기',
+                statCharts: '차트 유형',
+                statLangs: '지원 언어',
+                statFormats: '파일 형식',
+                statInsights: 'AI 인사이트',
+                featuresTag: '기능',
+                featuresTitle: '강력한 데이터 분석 도구',
+                featuresDescription: 'AI로 데이터를 이해하는 데 필요한 모든 것',
+                feature1Title: '스마트 파일 업로드',
+                feature1Desc: 'CSV, Excel (.xlsx, .xls), JSON 파일을 드래그 앤 드롭. 최대 16MB까지 자동 형식 감지 및 파싱.',
+                feature2Title: '10+ 차트 유형',
+                feature2Desc: '막대, 선, 파이, 산점도, 히스토그램, 히트맵, 박스플롯, 영역, 도넛, 레이더 차트와 커스터마이징 옵션.',
+                feature3Title: '통계 분석',
+                feature3Desc: '숫자 데이터의 평균, 중앙값, 표준편차, 최소/최대, 사분위수 및 범주형 데이터의 빈도 분석 자동 계산.',
+                feature4Title: '자연어 쿼리',
+                feature4Desc: '일상 언어로 데이터에 대해 질문하세요. AI가 맥락을 이해하고 지능적인 응답을 제공합니다.',
+                feature5Title: 'AI 생성 인사이트',
+                feature5Desc: 'LLM 기반의 자동 패턴 인식, 트렌드 분석 및 실행 가능한 권장 사항.',
+                feature6Title: '분석 히스토리',
+                feature6Desc: '지속적인 히스토리로 모든 분석을 추적. 이전 인사이트를 검토, 비교 및 활용.',
+                demoTag: '인터랙티브 데모',
+                demoTitle: '실제로 확인하세요',
+                demoDescription: 'AI 기반 데이터 분석의 힘을 경험하세요',
+                demoUploadText: '파일을 여기에 놓으세요',
+                demoUploadSubtext: 'CSV, Excel, JSON (최대 16MB)',
+                demoColumnsTitle: '컬럼',
+                demoTabData: '데이터',
+                demoTabChart: '차트',
+                demoTabStats: '통계',
+                demoTabInsights: '인사이트',
+                demoTabChat: '채팅',
+                demoTabHistory: '히스토리',
+                demoChartTitle: '카테고리별 매출',
+                chartsTag: '시각화',
+                chartsTitle: '10+ 차트 유형 지원',
+                chartsDescription: '데이터에 완벽한 시각화를 선택하세요',
+                languagesTag: '글로벌',
+                languagesTitle: '7개 언어 지원',
+                languagesDescription: '선호하는 언어로 도구를 사용하세요',
+                useCasesTag: '사용 사례',
+                useCasesTitle: '모든 산업을 위한 도구',
+                useCasesDescription: '모든 비즈니스 니즈를 위한 강력한 데이터 분석',
+                useCase1Title: '비즈니스 분석',
+                useCase1Desc: '판매 데이터, 고객 지표, KPI를 분석하여 데이터 기반 의사결정을 내리세요.',
+                useCase2Title: '재무 분석',
+                useCase2Desc: 'AI 인사이트로 비용, 수익 트렌드, 재무 예측을 추적하세요.',
+                useCase3Title: '연구 및 과학',
+                useCase3Desc: '연구 데이터, 실험, 과학적 연구를 위한 통계 분석.',
+                useCase4Title: '마케팅 분석',
+                useCase4Desc: '캠페인 성과, 고객 세분화, 전환 분석.',
+                ctaTitle: '데이터 분석을 시작할 준비가 되셨나요?',
+                ctaDescription: 'OpenWebUI로 자신만의 AI 데이터 분석가를 배포하고 몇 분 안에 인사이트를 얻으세요.',
+                ctaBtnStart: '시작하기',
+                ctaBtnDocs: '문서'
+            },
+            ja: {
+                logoTitle: 'AI データアナリスト',
+                logoSubtitle: 'OpenWebUI + LLM 搭載',
+                navFeatures: '機能',
+                navDemo: 'デモ',
+                navCharts: 'チャート',
+                navLanguages: '言語',
+                heroBadge: 'AI駆動データ分析',
+                heroTitle: 'データを<span>実行可能なインサイト</span>に変換',
+                heroDescription: 'CSV、Excel、JSONファイルをアップロードすると、AIが即座に統計分析、視覚化、自然言語インサイトを生成します。',
+                btnGithub: 'GitHubで見る',
+                btnDemo: 'デモを見る',
+                statCharts: 'チャートタイプ',
+                statLangs: '対応言語',
+                statFormats: 'ファイル形式',
+                statInsights: 'AIインサイト',
+                featuresTag: '機能',
+                featuresTitle: '強力なデータ分析ツール',
+                featuresDescription: 'AIでデータを理解するために必要なすべて',
+                feature1Title: 'スマートファイルアップロード',
+                feature1Desc: 'CSV、Excel (.xlsx, .xls)、JSONファイルをドラッグ＆ドロップ。最大16MBまで自動フォーマット検出とパース。',
+                feature2Title: '10+チャートタイプ',
+                feature2Desc: '棒、線、円、散布図、ヒストグラム、ヒートマップ、箱ひげ図、エリア、ドーナツ、レーダーチャートとカスタマイズオプション。',
+                feature3Title: '統計分析',
+                feature3Desc: '数値データの平均、中央値、標準偏差、最小/最大、四分位数と分類データの頻度分析を自動計算。',
+                feature4Title: '自然言語クエリ',
+                feature4Desc: 'データについて日常言語で質問。AIがコンテキストを理解し、インテリジェントな回答を提供。',
+                feature5Title: 'AI生成インサイト',
+                feature5Desc: 'LLM搭載の自動パターン認識、トレンド分析、実行可能な推奨事項。',
+                feature6Title: '分析履歴',
+                feature6Desc: '永続的な履歴ですべての分析を追跡。以前のインサイトを確認、比較、活用。',
+                demoTag: 'インタラクティブデモ',
+                demoTitle: '実際に見てみましょう',
+                demoDescription: 'AI駆動データ分析のパワーを体験',
+                demoUploadText: 'ここにファイルをドロップ',
+                demoUploadSubtext: 'CSV、Excel、JSON（最大16MB）',
+                demoColumnsTitle: 'カラム',
+                demoTabData: 'データ',
+                demoTabChart: 'チャート',
+                demoTabStats: '統計',
+                demoTabInsights: 'インサイト',
+                demoTabChat: 'チャット',
+                demoTabHistory: '履歴',
+                demoChartTitle: 'カテゴリ別売上',
+                chartsTag: '視覚化',
+                chartsTitle: '10+チャートタイプ対応',
+                chartsDescription: 'データに最適な視覚化を選択',
+                languagesTag: 'グローバル',
+                languagesTitle: '7言語対応',
+                languagesDescription: 'お好みの言語でツールを使用',
+                useCasesTag: 'ユースケース',
+                useCasesTitle: 'あらゆる業界向け',
+                useCasesDescription: 'あらゆるビジネスニーズに対応する強力なデータ分析',
+                useCase1Title: 'ビジネス分析',
+                useCase1Desc: '販売データ、顧客指標、KPIを分析してデータ駆動の意思決定。',
+                useCase2Title: '財務分析',
+                useCase2Desc: 'AIインサイトで経費、収益トレンド、財務予測を追跡。',
+                useCase3Title: '研究・科学',
+                useCase3Desc: '研究データ、実験、科学研究のための統計分析。',
+                useCase4Title: 'マーケティング分析',
+                useCase4Desc: 'キャンペーンパフォーマンス、顧客セグメンテーション、コンバージョン分析。',
+                ctaTitle: 'データ分析を始める準備はできましたか？',
+                ctaDescription: 'OpenWebUIで独自のAIデータアナリストをデプロイし、数分でインサイトを取得。',
+                ctaBtnStart: '始める',
+                ctaBtnDocs: 'ドキュメント'
+            },
+            zh: {
+                logoTitle: 'AI 数据分析师',
+                logoSubtitle: 'OpenWebUI + LLM 驱动',
+                navFeatures: '功能',
+                navDemo: '演示',
+                navCharts: '图表',
+                navLanguages: '语言',
+                heroBadge: 'AI驱动数据分析',
+                heroTitle: '将数据转化为<span>可执行的洞察</span>',
+                heroDescription: '上传CSV、Excel或JSON文件，让AI即时生成统计分析、精美可视化和自然语言洞察。',
+                btnGithub: '在GitHub上查看',
+                btnDemo: '查看演示',
+                statCharts: '图表类型',
+                statLangs: '支持语言',
+                statFormats: '文件格式',
+                statInsights: 'AI洞察',
+                featuresTag: '功能',
+                featuresTitle: '强大的数据分析工具',
+                featuresDescription: '用AI理解数据所需的一切',
+                feature1Title: '智能文件上传',
+                feature1Desc: '拖放CSV、Excel (.xlsx, .xls)或JSON文件。最大16MB自动格式检测和解析。',
+                feature2Title: '10+图表类型',
+                feature2Desc: '条形图、折线图、饼图、散点图、直方图、热力图、箱线图、面积图、环形图、雷达图及自定义选项。',
+                feature3Title: '统计分析',
+                feature3Desc: '自动计算数值数据的均值、中位数、标准差、最小/最大值、四分位数以及分类数据的频率分析。',
+                feature4Title: '自然语言查询',
+                feature4Desc: '用日常语言询问数据问题。AI理解上下文并提供智能响应。',
+                feature5Title: 'AI生成洞察',
+                feature5Desc: 'LLM驱动的自动模式识别、趋势分析和可执行建议。',
+                feature6Title: '分析历史',
+                feature6Desc: '通过持久历史跟踪所有分析。查看、比较和利用以前的洞察。',
+                demoTag: '交互式演示',
+                demoTitle: '实际体验',
+                demoDescription: '体验AI驱动数据分析的强大功能',
+                demoUploadText: '将文件拖放到这里',
+                demoUploadSubtext: 'CSV、Excel、JSON（最大16MB）',
+                demoColumnsTitle: '列',
+                demoTabData: '数据',
+                demoTabChart: '图表',
+                demoTabStats: '统计',
+                demoTabInsights: '洞察',
+                demoTabChat: '聊天',
+                demoTabHistory: '历史',
+                demoChartTitle: '按类别收入',
+                chartsTag: '可视化',
+                chartsTitle: '10+图表类型可用',
+                chartsDescription: '为数据选择完美的可视化',
+                languagesTag: '全球化',
+                languagesTitle: '支持7种语言',
+                languagesDescription: '使用您喜欢的语言',
+                useCasesTag: '用例',
+                useCasesTitle: '适用于各行各业',
+                useCasesDescription: '满足各种业务需求的强大数据分析',
+                useCase1Title: '商业分析',
+                useCase1Desc: '分析销售数据、客户指标和KPI，做出数据驱动的决策。',
+                useCase2Title: '财务分析',
+                useCase2Desc: '用AI洞察跟踪费用、收入趋势和财务预测。',
+                useCase3Title: '研究与科学',
+                useCase3Desc: '研究数据、实验和科学研究的统计分析。',
+                useCase4Title: '营销分析',
+                useCase4Desc: '活动表现、客户细分和转化分析。',
+                ctaTitle: '准备好分析数据了吗？',
+                ctaDescription: '使用OpenWebUI部署您自己的AI数据分析师，几分钟内获得洞察。',
+                ctaBtnStart: '开始使用',
+                ctaBtnDocs: '文档'
+            },
+            es: {
+                logoTitle: 'Analista de Datos IA',
+                logoSubtitle: 'Potenciado por OpenWebUI + LLM',
+                navFeatures: 'Características',
+                navDemo: 'Demo',
+                navCharts: 'Gráficos',
+                navLanguages: 'Idiomas',
+                heroBadge: 'Análisis de Datos con IA',
+                heroTitle: 'Transforma tus Datos en <span>Insights Accionables</span>',
+                heroDescription: 'Sube archivos CSV, Excel o JSON y deja que la IA genere análisis estadístico instantáneo, hermosas visualizaciones e insights en lenguaje natural.',
+                btnGithub: 'Ver en GitHub',
+                btnDemo: 'Ver Demo',
+                statCharts: 'Tipos de Gráficos',
+                statLangs: 'Idiomas',
+                statFormats: 'Formatos de Archivo',
+                statInsights: 'Insights IA',
+                featuresTag: 'Características',
+                featuresTitle: 'Herramientas Potentes de Análisis',
+                featuresDescription: 'Todo lo que necesitas para entender tus datos, potenciado por IA avanzada',
+                feature1Title: 'Carga Inteligente',
+                feature1Desc: 'Arrastra y suelta archivos CSV, Excel (.xlsx, .xls) o JSON. Detección automática de formato hasta 16MB.',
+                feature2Title: '10+ Tipos de Gráficos',
+                feature2Desc: 'Barras, Líneas, Circular, Dispersión, Histograma, Mapa de Calor, Caja, Área, Dona, Radar con opciones de personalización.',
+                feature3Title: 'Análisis Estadístico',
+                feature3Desc: 'Cálculo automático de media, mediana, desviación estándar, mín/máx, cuartiles y análisis de frecuencia.',
+                feature4Title: 'Consultas en Lenguaje Natural',
+                feature4Desc: 'Haz preguntas sobre tus datos en lenguaje simple. La IA entiende el contexto y proporciona respuestas inteligentes.',
+                feature5Title: 'Insights Generados por IA',
+                feature5Desc: 'Reconocimiento automático de patrones, análisis de tendencias y recomendaciones accionables con LLM.',
+                feature6Title: 'Historial de Análisis',
+                feature6Desc: 'Rastrea todos tus análisis con historial persistente. Revisa, compara y aprovecha insights anteriores.',
+                demoTag: 'Demo Interactiva',
+                demoTitle: 'Míralo en Acción',
+                demoDescription: 'Experimenta el poder del análisis de datos con IA',
+                demoUploadText: 'Suelta tu archivo aquí',
+                demoUploadSubtext: 'CSV, Excel o JSON (máx 16MB)',
+                demoColumnsTitle: 'COLUMNAS',
+                demoTabData: 'Datos',
+                demoTabChart: 'Gráfico',
+                demoTabStats: 'Estadísticas',
+                demoTabInsights: 'Insights',
+                demoTabChat: 'Chat',
+                demoTabHistory: 'Historial',
+                demoChartTitle: 'Ingresos por Categoría',
+                chartsTag: 'Visualizaciones',
+                chartsTitle: '10+ Tipos de Gráficos Disponibles',
+                chartsDescription: 'Elige la visualización perfecta para tus datos',
+                languagesTag: 'Global',
+                languagesTitle: '7 Idiomas Soportados',
+                languagesDescription: 'Usa la herramienta en tu idioma preferido',
+                useCasesTag: 'Casos de Uso',
+                useCasesTitle: 'Construido para Cada Industria',
+                useCasesDescription: 'Análisis de datos potente para cualquier necesidad empresarial',
+                useCase1Title: 'Análisis de Negocios',
+                useCase1Desc: 'Analiza datos de ventas, métricas de clientes y KPIs para tomar decisiones basadas en datos.',
+                useCase2Title: 'Análisis Financiero',
+                useCase2Desc: 'Rastrea gastos, tendencias de ingresos y previsiones financieras con insights de IA.',
+                useCase3Title: 'Investigación y Ciencia',
+                useCase3Desc: 'Análisis estadístico para datos de investigación, experimentos y estudios científicos.',
+                useCase4Title: 'Análisis de Marketing',
+                useCase4Desc: 'Rendimiento de campañas, segmentación de clientes y análisis de conversión.',
+                ctaTitle: '¿Listo para Analizar tus Datos?',
+                ctaDescription: 'Despliega tu propio Analista de Datos IA con OpenWebUI y comienza a obtener insights en minutos.',
+                ctaBtnStart: 'Comenzar',
+                ctaBtnDocs: 'Documentación'
+            },
+            fr: {
+                logoTitle: 'Analyste de Données IA',
+                logoSubtitle: 'Propulsé par OpenWebUI + LLM',
+                navFeatures: 'Fonctionnalités',
+                navDemo: 'Démo',
+                navCharts: 'Graphiques',
+                navLanguages: 'Langues',
+                heroBadge: 'Analyse de Données IA',
+                heroTitle: 'Transformez vos Données en <span>Insights Actionnables</span>',
+                heroDescription: 'Téléchargez des fichiers CSV, Excel ou JSON et laissez l\'IA générer des analyses statistiques instantanées, de belles visualisations et des insights en langage naturel.',
+                btnGithub: 'Voir sur GitHub',
+                btnDemo: 'Voir la Démo',
+                statCharts: 'Types de Graphiques',
+                statLangs: 'Langues',
+                statFormats: 'Formats de Fichiers',
+                statInsights: 'Insights IA',
+                featuresTag: 'Fonctionnalités',
+                featuresTitle: 'Outils d\'Analyse Puissants',
+                featuresDescription: 'Tout ce dont vous avez besoin pour comprendre vos données, propulsé par l\'IA avancée',
+                feature1Title: 'Téléchargement Intelligent',
+                feature1Desc: 'Glissez-déposez des fichiers CSV, Excel (.xlsx, .xls) ou JSON. Détection automatique de format jusqu\'à 16MB.',
+                feature2Title: '10+ Types de Graphiques',
+                feature2Desc: 'Barres, Lignes, Camembert, Dispersion, Histogramme, Carte de Chaleur, Boîte, Zone, Donut, Radar avec options de personnalisation.',
+                feature3Title: 'Analyse Statistique',
+                feature3Desc: 'Calcul automatique de moyenne, médiane, écart-type, min/max, quartiles et analyse de fréquence.',
+                feature4Title: 'Requêtes en Langage Naturel',
+                feature4Desc: 'Posez des questions sur vos données en langage simple. L\'IA comprend le contexte et fournit des réponses intelligentes.',
+                feature5Title: 'Insights Générés par IA',
+                feature5Desc: 'Reconnaissance automatique de motifs, analyse de tendances et recommandations actionnables avec LLM.',
+                feature6Title: 'Historique d\'Analyse',
+                feature6Desc: 'Suivez toutes vos analyses avec un historique persistant. Révisez, comparez et exploitez les insights précédents.',
+                demoTag: 'Démo Interactive',
+                demoTitle: 'Voyez-le en Action',
+                demoDescription: 'Découvrez la puissance de l\'analyse de données par IA',
+                demoUploadText: 'Déposez votre fichier ici',
+                demoUploadSubtext: 'CSV, Excel ou JSON (max 16MB)',
+                demoColumnsTitle: 'COLONNES',
+                demoTabData: 'Données',
+                demoTabChart: 'Graphique',
+                demoTabStats: 'Statistiques',
+                demoTabInsights: 'Insights',
+                demoTabChat: 'Chat',
+                demoTabHistory: 'Historique',
+                demoChartTitle: 'Revenus par Catégorie',
+                chartsTag: 'Visualisations',
+                chartsTitle: '10+ Types de Graphiques Disponibles',
+                chartsDescription: 'Choisissez la visualisation parfaite pour vos données',
+                languagesTag: 'Global',
+                languagesTitle: '7 Langues Supportées',
+                languagesDescription: 'Utilisez l\'outil dans votre langue préférée',
+                useCasesTag: 'Cas d\'Usage',
+                useCasesTitle: 'Conçu pour Chaque Industrie',
+                useCasesDescription: 'Analyse de données puissante pour tous les besoins métier',
+                useCase1Title: 'Analyse Business',
+                useCase1Desc: 'Analysez les données de vente, métriques clients et KPIs pour des décisions basées sur les données.',
+                useCase2Title: 'Analyse Financière',
+                useCase2Desc: 'Suivez les dépenses, tendances de revenus et prévisions financières avec des insights IA.',
+                useCase3Title: 'Recherche & Science',
+                useCase3Desc: 'Analyse statistique pour données de recherche, expériences et études scientifiques.',
+                useCase4Title: 'Analyse Marketing',
+                useCase4Desc: 'Performance de campagne, segmentation client et analyse de conversion.',
+                ctaTitle: 'Prêt à Analyser vos Données?',
+                ctaDescription: 'Déployez votre propre Analyste de Données IA avec OpenWebUI et obtenez des insights en minutes.',
+                ctaBtnStart: 'Commencer',
+                ctaBtnDocs: 'Documentation'
+            },
+            de: {
+                logoTitle: 'KI-Datenanalyst',
+                logoSubtitle: 'Powered by OpenWebUI + LLM',
+                navFeatures: 'Funktionen',
+                navDemo: 'Demo',
+                navCharts: 'Diagramme',
+                navLanguages: 'Sprachen',
+                heroBadge: 'KI-gestützte Datenanalyse',
+                heroTitle: 'Verwandeln Sie Daten in <span>Umsetzbare Erkenntnisse</span>',
+                heroDescription: 'Laden Sie CSV-, Excel- oder JSON-Dateien hoch und lassen Sie KI sofortige statistische Analysen, schöne Visualisierungen und Erkenntnisse in natürlicher Sprache generieren.',
+                btnGithub: 'Auf GitHub ansehen',
+                btnDemo: 'Demo ansehen',
+                statCharts: 'Diagrammtypen',
+                statLangs: 'Sprachen',
+                statFormats: 'Dateiformate',
+                statInsights: 'KI-Erkenntnisse',
+                featuresTag: 'Funktionen',
+                featuresTitle: 'Leistungsstarke Datenanalyse-Tools',
+                featuresDescription: 'Alles was Sie brauchen, um Ihre Daten zu verstehen, angetrieben von fortschrittlicher KI',
+                feature1Title: 'Intelligenter Datei-Upload',
+                feature1Desc: 'Drag & Drop von CSV-, Excel (.xlsx, .xls)- oder JSON-Dateien. Automatische Formaterkennung bis zu 16MB.',
+                feature2Title: '10+ Diagrammtypen',
+                feature2Desc: 'Balken-, Linien-, Kreis-, Streu-, Histogramm-, Heatmap-, Box-, Flächen-, Donut-, Radar-Diagramme mit Anpassungsoptionen.',
+                feature3Title: 'Statistische Analyse',
+                feature3Desc: 'Automatische Berechnung von Mittelwert, Median, Standardabweichung, Min/Max, Quartilen und Häufigkeitsanalyse.',
+                feature4Title: 'Natürlichsprachliche Abfragen',
+                feature4Desc: 'Stellen Sie Fragen zu Ihren Daten in einfacher Sprache. KI versteht den Kontext und liefert intelligente Antworten.',
+                feature5Title: 'KI-generierte Erkenntnisse',
+                feature5Desc: 'Automatische Mustererkennung, Trendanalyse und umsetzbare Empfehlungen mit LLM.',
+                feature6Title: 'Analyse-Verlauf',
+                feature6Desc: 'Verfolgen Sie alle Analysen mit persistentem Verlauf. Überprüfen, vergleichen und nutzen Sie frühere Erkenntnisse.',
+                demoTag: 'Interaktive Demo',
+                demoTitle: 'Sehen Sie es in Aktion',
+                demoDescription: 'Erleben Sie die Kraft der KI-gesteuerten Datenanalyse',
+                demoUploadText: 'Datei hier ablegen',
+                demoUploadSubtext: 'CSV, Excel oder JSON (max 16MB)',
+                demoColumnsTitle: 'SPALTEN',
+                demoTabData: 'Daten',
+                demoTabChart: 'Diagramm',
+                demoTabStats: 'Statistik',
+                demoTabInsights: 'Erkenntnisse',
+                demoTabChat: 'Chat',
+                demoTabHistory: 'Verlauf',
+                demoChartTitle: 'Umsatz nach Kategorie',
+                chartsTag: 'Visualisierungen',
+                chartsTitle: '10+ Diagrammtypen verfügbar',
+                chartsDescription: 'Wählen Sie die perfekte Visualisierung für Ihre Daten',
+                languagesTag: 'Global',
+                languagesTitle: '7 Sprachen unterstützt',
+                languagesDescription: 'Verwenden Sie das Tool in Ihrer bevorzugten Sprache',
+                useCasesTag: 'Anwendungsfälle',
+                useCasesTitle: 'Für jede Branche entwickelt',
+                useCasesDescription: 'Leistungsstarke Datenanalyse für jeden Geschäftsbedarf',
+                useCase1Title: 'Business-Analyse',
+                useCase1Desc: 'Analysieren Sie Verkaufsdaten, Kundenmetriken und KPIs für datengesteuerte Entscheidungen.',
+                useCase2Title: 'Finanzanalyse',
+                useCase2Desc: 'Verfolgen Sie Ausgaben, Umsatztrends und Finanzprognosen mit KI-Erkenntnissen.',
+                useCase3Title: 'Forschung & Wissenschaft',
+                useCase3Desc: 'Statistische Analyse für Forschungsdaten, Experimente und wissenschaftliche Studien.',
+                useCase4Title: 'Marketing-Analyse',
+                useCase4Desc: 'Kampagnenleistung, Kundensegmentierung und Conversion-Analyse.',
+                ctaTitle: 'Bereit, Ihre Daten zu analysieren?',
+                ctaDescription: 'Stellen Sie Ihren eigenen KI-Datenanalysten mit OpenWebUI bereit und erhalten Sie in Minuten Erkenntnisse.',
+                ctaBtnStart: 'Loslegen',
+                ctaBtnDocs: 'Dokumentation'
+            }
         };
+
+        let currentLang = 'en';
+
         function setLanguage(lang) {
-            const t = i18n[lang];
-            document.getElementById('title').textContent = t.title;
-            document.getElementById('demoBadge').textContent = t.demoBadge;
-            document.getElementById('heroTitle').textContent = t.heroTitle;
-            document.getElementById('heroDesc').textContent = t.heroDesc;
-            document.getElementById('feat1Title').textContent = t.feat1Title;
-            document.getElementById('feat1Desc').textContent = t.feat1Desc;
-            document.getElementById('feat2Title').textContent = t.feat2Title;
-            document.getElementById('feat2Desc').textContent = t.feat2Desc;
-            document.getElementById('feat3Title').textContent = t.feat3Title;
-            document.getElementById('feat3Desc').textContent = t.feat3Desc;
-            document.getElementById('feat4Title').textContent = t.feat4Title;
-            document.getElementById('feat4Desc').textContent = t.feat4Desc;
-            document.getElementById('feat5Title').textContent = t.feat5Title;
-            document.getElementById('feat5Desc').textContent = t.feat5Desc;
-            document.getElementById('feat6Title').textContent = t.feat6Title;
-            document.getElementById('feat6Desc').textContent = t.feat6Desc;
-            document.getElementById('quickStartTitle').textContent = t.quickStartTitle;
-            document.getElementById('viewGithub').innerHTML = `📦 ${t.viewGithub}`;
-            document.getElementById('learnMore').innerHTML = `📖 ${t.learnMore}`;
-            document.getElementById('footerText').innerHTML = `${t.footerText}<br><a href="https://github.com/yoon-k">GitHub</a> • MIT License`;
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.textContent === lang.toUpperCase()));
+            currentLang = lang;
+            const texts = i18n[lang];
+            
+            // Update all text elements
+            Object.keys(texts).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (key === 'heroTitle') {
+                        element.innerHTML = texts[key];
+                    } else {
+                        element.textContent = texts[key];
+                    }
+                }
+            });
+
+            // Update active language button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Save preference
+            localStorage.setItem('preferredLanguage', lang);
         }
+
+        // Detect browser language on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('preferredLanguage');
+            if (saved && i18n[saved]) {
+                const btn = document.querySelector(`.lang-btn[onclick="setLanguage('${saved}')"]`);
+                if (btn) btn.click();
+            }
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
     </script>
 </body>
 </html>
